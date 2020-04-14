@@ -2,6 +2,7 @@ on:
   push:
     paths:
       - 'plugins/**'
+  repository_dispatch:
 
 env:
   releaseName: v${{ github.run_number }}
