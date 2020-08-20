@@ -1,2 +1,2 @@
-rootProject.name = "Corona Native Android"
+rootProject.name = "GPGSv2 Plugin"
 include("app", "plugin")
