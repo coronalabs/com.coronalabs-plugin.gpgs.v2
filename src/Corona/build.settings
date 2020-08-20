@@ -1,0 +1,15 @@
+settings = {
+	orientation = {
+		default = 'portrait',
+		supported = {'portrait', 'portraitUpsideDown'}
+	},
+	android = {
+		googlePlayGamesAppId = '249065139734' -- Your Google Play Games App Id
+	},
+    plugins = {
+        ["plugin.gpgs.v2"] = {
+            publisherId = "com.coronalabs",
+            supportedPlatforms = { ["android"] = true }
+        }
+    }
+}

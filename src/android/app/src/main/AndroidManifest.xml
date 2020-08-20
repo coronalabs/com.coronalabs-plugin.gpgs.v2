@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+          package="com.mycompany.app"
+          android:installLocation="auto">
+
+
+    <application android:label="Corona App">
+        <meta-data android:name="com.google.android.gms.games.APP_ID"
+            android:value="\u003799878552852" />
+
+        <meta-data android:name="com.google.android.gms.version"
+                   android:value="@integer/google_play_services_version"/>
+
+    </application>
+</manifest>
