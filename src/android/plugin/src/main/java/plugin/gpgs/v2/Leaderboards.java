@@ -1,7 +1,7 @@
 package plugin.gpgs.v2;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.games.AnnotatedData;
 import com.google.android.gms.games.Games;

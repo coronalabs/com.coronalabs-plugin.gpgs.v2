@@ -13,19 +13,13 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.games.Game;
 import com.google.android.gms.games.GamesActivityResultCodes;
-import com.google.android.gms.games.NotificationsClient;
 import com.google.android.gms.games.Player;
 import com.google.android.gms.games.PlayerLevel;
 import com.google.android.gms.games.PlayerLevelInfo;
 import com.google.android.gms.games.leaderboard.LeaderboardScore;
 import com.google.android.gms.games.leaderboard.LeaderboardVariant;
-import com.google.android.gms.games.multiplayer.Invitation;
-import com.google.android.gms.games.multiplayer.Participant;
-import com.google.android.gms.games.multiplayer.ParticipantResult;
-import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatch;
 import com.google.android.gms.games.snapshot.SnapshotMetadata;
 import com.google.android.gms.games.video.VideoConfiguration;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
@@ -36,7 +30,7 @@ import static com.google.android.gms.games.GamesStatusCodes.STATUS_INTERNAL_ERRO
 import static com.google.android.gms.games.GamesStatusCodes.STATUS_MULTIPLAYER_DISABLED;
 import static com.google.android.gms.games.GamesStatusCodes.STATUS_OK;
 import static com.google.android.gms.games.GamesStatusCodes.STATUS_REAL_TIME_CONNECTION_FAILED;
-import static com.google.android.gms.games.multiplayer.realtime.Room.ROOM_VARIANT_DEFAULT;
+
 
 abstract class Utils extends LuaUtils {
 	static int clamp(int value, int min, int max) {
@@ -66,16 +60,10 @@ abstract class Utils extends LuaUtils {
 				return "canceled";
 			case GamesActivityResultCodes.RESULT_APP_MISCONFIGURED:
 				return "app misconfigured";
-			case GamesActivityResultCodes.RESULT_INVALID_ROOM:
-				return "invalid room";
-			case GamesActivityResultCodes.RESULT_LEFT_ROOM:
-				return "left room";
 			case GamesActivityResultCodes.RESULT_LICENSE_FAILED:
 				return "license failed";
 			case GamesActivityResultCodes.RESULT_NETWORK_FAILURE:
 				return "network failure";
-			case GamesActivityResultCodes.RESULT_SEND_REQUEST_FAILED:
-				return "send request failed";
 			case GamesActivityResultCodes.RESULT_RECONNECT_REQUIRED:
 				return "reconnect required";
 			case GamesActivityResultCodes.RESULT_SIGN_IN_FAILED:
@@ -116,7 +104,13 @@ abstract class Utils extends LuaUtils {
 				return "Unknown error code (" + errorCode + ")";
 		}
 	}
-
+	static int getCollection(boolean friendsOnly) {
+		if (friendsOnly) {
+			return LeaderboardVariant.COLLECTION_FRIENDS;
+		} else {
+			return LeaderboardVariant.COLLECTION_PUBLIC;
+		}
+	}
 	static String statusCodeToString(int statusCode) {
 		switch (statusCode) {
 			case STATUS_OK:
@@ -196,14 +190,6 @@ abstract class Utils extends LuaUtils {
 				return LeaderboardVariant.TIME_SPAN_WEEKLY;
 			default:
 				return LeaderboardVariant.TIME_SPAN_ALL_TIME;
-		}
-	}
-
-	static int getCollection(boolean friendsOnly) {
-		if (friendsOnly) {
-			return LeaderboardVariant.COLLECTION_SOCIAL;
-		} else {
-			return LeaderboardVariant.COLLECTION_PUBLIC;
 		}
 	}
 
@@ -291,8 +277,6 @@ abstract class Utils extends LuaUtils {
 		put(game, "secondaryCategory", g.getSecondaryCategory());
 		put(game, "themeColor", g.getThemeColor());
 		put(game, "hasGamepadSupport", g.hasGamepadSupport());
-		put(game, "isRealTimeMultiplayerEnabled", g.isRealTimeMultiplayerEnabled());
-		put(game, "isTurnBasedMultiplayerEnabled", g.isTurnBasedMultiplayerEnabled());
 		return game;
 	}
 
@@ -321,65 +305,9 @@ abstract class Utils extends LuaUtils {
 		return metadata;
 	}
 
-	static int[] filtersToMatchTurnStatuses(Hashtable<Object, Object> filters) {
-		if ((filters == null) || (filters.size() == 0)) {
-			return TurnBasedMatch.MATCH_TURN_STATUS_ALL;
-		}
-		int[] matchTurnStatuses = new int[filters.size()];
 
-		int index = 0;
-		for (Object f : filters.values()) {
-			switch ((String) f) {
-				case "complete":
-					matchTurnStatuses[index++] = TurnBasedMatch.MATCH_TURN_STATUS_COMPLETE;
-					break;
-				case "invited":
-					matchTurnStatuses[index++] = TurnBasedMatch.MATCH_TURN_STATUS_INVITED;
-					break;
-				case "my turn":
-					matchTurnStatuses[index++] = TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN;
-					break;
-				case "their turn":
-					matchTurnStatuses[index++] = TurnBasedMatch.MATCH_TURN_STATUS_THEIR_TURN;
-					break;
-			}
-		}
-		matchTurnStatuses = Arrays.copyOfRange(matchTurnStatuses, 0, index);
-		if (matchTurnStatuses.length == 0) {
-			return TurnBasedMatch.MATCH_TURN_STATUS_ALL;
-		}
-		return matchTurnStatuses;
-	}
 
-	static int notificationTypesToInt(Hashtable<Object, Object> notificationTypes) {
-		if ((notificationTypes == null) || (notificationTypes.size() == 0)) {
-			return NotificationsClient.NOTIFICATION_TYPES_ALL;
-		}
-		int notificationTypesInt = 0;
-		for (Object f : notificationTypes.values()) {
-			switch ((String) f) {
-				case "all":
-					notificationTypesInt = notificationTypesInt | NotificationsClient.NOTIFICATION_TYPES_ALL;
-					break;
-				case "multiplayer":
-					notificationTypesInt = notificationTypesInt | NotificationsClient.NOTIFICATION_TYPES_MULTIPLAYER;
-					break;
-				case "invitation":
-					notificationTypesInt = notificationTypesInt | NotificationsClient.NOTIFICATION_TYPE_INVITATION;
-					break;
-				case "level up":
-					notificationTypesInt = notificationTypesInt | NotificationsClient.NOTIFICATION_TYPE_LEVEL_UP;
-					break;
-				case "match update":
-					notificationTypesInt = notificationTypesInt | NotificationsClient.NOTIFICATION_TYPE_MATCH_UPDATE;
-					break;
-			}
-		}
-		if (notificationTypesInt == 0) {
-			return NotificationsClient.NOTIFICATION_TYPES_ALL;
-		}
-		return notificationTypesInt;
-	}
+
 
 	static Integer captureModeToInt(String mode) {
 		if (mode != null) {
@@ -403,128 +331,8 @@ abstract class Utils extends LuaUtils {
 		return status;
 	}
 
-	static Hashtable<Object, Object> participantToHashtable(Participant p) {
-		Hashtable<Object, Object> participant = new Hashtable<>();
-		participant.put("capabilities", p.getCapabilities()); // Unknown property, not mentioned in Google documentation
-		participant.put("name", p.getDisplayName());
-		participant.put("largeImageUri", p.getHiResImageUri());
-		participant.put("smallImageUri", p.getIconImageUri());
-		participant.put("id", p.getParticipantId());
-		participant.put("player", playerToHashtable(p.getPlayer()));
-		ParticipantResult r = p.getResult();
-		if (r != null) {
-			if (r.getPlacing() != ParticipantResult.PLACING_UNINITIALIZED) {
-				participant.put("placing", r.getPlacing());
-			}
-			String result;
-			switch (p.getStatus()) {
-				case ParticipantResult.MATCH_RESULT_WIN:
-					result = "win";
-					break;
-				case ParticipantResult.MATCH_RESULT_LOSS:
-					result = "loss";
-					break;
-				case ParticipantResult.MATCH_RESULT_TIE:
-					result = "tie";
-					break;
-				case ParticipantResult.MATCH_RESULT_NONE:
-					result = "none";
-					break;
-				case ParticipantResult.MATCH_RESULT_DISCONNECT:
-					result = "disconnect";
-					break;
-				case ParticipantResult.MATCH_RESULT_DISAGREED:
-					result = "disagreed";
-					break;
-				default:
-					result = "unknown";
-			}
-			participant.put("result", result);
-		}
-		String status;
-		switch (p.getStatus()) {
-			case Participant.STATUS_INVITED:
-				status = "invited";
-				break;
-			case Participant.STATUS_JOINED:
-				status = "joined";
-				break;
-			case Participant.STATUS_DECLINED:
-				status = "declined";
-				break;
-			case Participant.STATUS_LEFT:
-				status = "left";
-				break;
-			case Participant.STATUS_NOT_INVITED_YET:
-				status = "not invited yet";
-				break;
-			case Participant.STATUS_FINISHED:
-				status = "finished";
-				break;
-			case Participant.STATUS_UNRESPONSIVE:
-				status = "unresponsive";
-				break;
-			default:
-				status = "unknown";
-		}
-		participant.put("status", status);
-		participant.put("isConnectedToRoom", p.isConnectedToRoom());
-		return participant;
-	}
 
-	static Hashtable<Object, Object> invitationToHashtable(Invitation i) {
-		Hashtable<Object, Object> invitation = new Hashtable<>();
-		invitation.put("availableAutoMatchSlots", i.getAvailableAutoMatchSlots());
-		invitation.put("timestamp", String.valueOf(i.getCreationTimestamp()));
-		invitation.put("game", Utils.gameToHashtable(i.getGame()));
-		invitation.put("id", i.getInvitationId());
-		invitation.put("isRealtime", i.getInvitationType() == Invitation.INVITATION_TYPE_REAL_TIME);
-		invitation.put("isTurnbased", i.getInvitationType() == Invitation.INVITATION_TYPE_TURN_BASED);
-		invitation.put("participant", participantToHashtable(i.getInviter()));
-		int variant = i.getVariant();
-		if (variant != ROOM_VARIANT_DEFAULT) { // Both values are -1, keeping both in case they are changed in the future.
-			invitation.put("variant", i.getVariant());
-		}
-		return invitation;
-	}
 
-	static ArrayList<ParticipantResult> participantResultsToArrayList(Hashtable<Object, Object> results) {
-		ArrayList<ParticipantResult> participantResults = new ArrayList<>();
-		if (results != null) {
-			for (Object o : results.values()) {
-				Hashtable<Object, Object> item = (Hashtable<Object, Object>)o;
-				String participantId = (String)item.get("participantId");
-				Integer result = ParticipantResult.MATCH_RESULT_NONE;
-				if (item.get("result") != null) {
-					switch ((String) item.get("result")) {
-						case "disagreed":
-							result = ParticipantResult.MATCH_RESULT_DISAGREED;
-							break;
-						case "disconnect":
-							result = ParticipantResult.MATCH_RESULT_DISCONNECT;
-							break;
-						case "loss":
-							result = ParticipantResult.MATCH_RESULT_LOSS;
-							break;
-						case "tie":
-							result = ParticipantResult.MATCH_RESULT_TIE;
-							break;
-						case "win":
-							result = ParticipantResult.MATCH_RESULT_WIN;
-							break;
-						default:
-							result = ParticipantResult.MATCH_RESULT_NONE;
-					}
-				}
-				Integer placing = (Integer)item.get("placing");
-				if (placing == null) {
-					placing = ParticipantResult.PLACING_UNINITIALIZED;
-				}
-				participantResults.add(new ParticipantResult(participantId, result, placing));
-			}
-		}
-		return participantResults;
-	}
 
 	static Hashtable<Object, Object> listToHashtable(List<String> list) {
 		int i = 1;

@@ -3,7 +3,7 @@ package plugin.gpgs.v2;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -15,6 +15,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.drive.Drive;
+import com.google.android.gms.common.api.Scope;
+import com.google.api.services.drive.DriveScopes;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesActivityResultCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,7 +41,8 @@ class Connector implements OnActivityResultHandler {
 		if(_signInOptions==null) {
 			_signInOptions = new GoogleSignInOptions.
 					Builder(GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN).
-					requestScopes(Drive.SCOPE_APPFOLDER).
+					requestScopes(new Scope(DriveScopes.DRIVE_FILE)).
+					requestScopes(new Scope(DriveScopes.DRIVE_APPDATA)).
 					requestScopes(Games.SCOPE_GAMES_LITE).
 					build();
 		}
@@ -98,7 +101,8 @@ class Connector implements OnActivityResultHandler {
     	_signInOptions = new GoogleSignInOptions.
 				Builder(GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN).
 				requestServerAuthCode(serverId).
-				requestScopes(Drive.SCOPE_APPFOLDER).
+				requestScopes(new Scope(DriveScopes.DRIVE_APPDATA)).
+				requestScopes(new Scope(DriveScopes.DRIVE_FILE)).
 				requestScopes(Games.SCOPE_GAMES_LITE).
 				requestEmail().
 				build();

@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.Gravity;
 
 import com.ansca.corona.CoronaActivity;
@@ -290,14 +290,7 @@ public class LuaLoader implements JavaFunction, Connector.SignInListener {
 
 	// plugin.gpgs.v2.clearNotifications(notificationTypes)
 	private int clearNotifications(LuaState L) {
-		Utils.debugLog("clearNotifications()");
-		if (Utils.checkConnection()) {
-			if (L.isTable(1)) {
-				Games.getNotificationsClient(Connector.getContext(), Connector.getSignInAccount()).clear(Utils.notificationTypesToInt(CoronaLua.toHashtable(L, 1)));
-			} else {
-				Games.getNotificationsClient(Connector.getContext(), Connector.getSignInAccount()).clearAll();
-			}
-		}
+		LuaUtils.errorLog("clearNotifications() is no longer supported");
 		return 0;
 	}
 
@@ -381,37 +374,14 @@ public class LuaLoader implements JavaFunction, Connector.SignInListener {
 			case "leaderboards":
 				return leaderboards.show(L);
 			case "selectPlayers":
-				return multiplayer.realtime.showSelectPlayers(L, true);
+				LuaUtils.errorLog("Multiplayer is no longer supported");
+				return 0;
 			case "waitingRoom":
-				L.getField(1, "roomID");
-				String roomId = L.toString(-1);
-				L.pop(1);
-
-				L.getField(1, "minPlayers");
-				int minPlayersRequired = L.toInteger(-1);
-				L.pop(1);
-
-				L.getField(1, "listener");
-				L.remove(1);
-
-				// New params
-				L.newTable(0, 3);
-
-				L.pushString(roomId);
-				L.setField(-2, "roomId");
-
-				L.pushInteger(minPlayersRequired);
-				L.setField(-2, "minPlayersRequired");
-
-				L.pushValue(1);
-				L.setField(-2, "listener");
-
-				L.remove(1); // remove original listener
-				return multiplayer.realtime.show(L, true);
+				LuaUtils.errorLog("Multiplayer is no longer supported");
+				return 0;
 			case "invitations":
-				L.getField(1, "listener");
-				L.remove(1);
-				return multiplayer.invitations.show(L, true);
+				LuaUtils.errorLog("Multiplayer is no longer supported");
+				return 0;
 			default:
 				return 0;
 		}
@@ -436,10 +406,10 @@ public class LuaLoader implements JavaFunction, Connector.SignInListener {
 					return leaderboards.request(L, action);
 				} else if (players.hasAction(action)) {
 					return players.request(L, action);
-				} else if (multiplayer.invitations.hasAction(action)) {
-					return multiplayer.invitations.request(L, action);
-				} else if (multiplayer.realtime.hasAction(action)) {
-					return multiplayer.realtime.request(L, action);
+				} else if (multiplayer.invitations.hasAction()) {
+					return multiplayer.invitations.request(L);
+				} else if (multiplayer.realtime.hasAction()) {
+					return multiplayer.realtime.request(L);
 				} else {
 					return 0;
 				}

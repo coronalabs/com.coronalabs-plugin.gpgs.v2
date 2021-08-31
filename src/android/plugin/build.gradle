@@ -13,6 +13,9 @@ android {
 
 dependencies {
     implementation ':Corona@aar'
-    implementation "com.google.android.gms:play-services-games:17.0.0"
-    implementation "com.google.android.gms:play-services-auth:16.0.0"
+    implementation "com.google.android.gms:play-services-games:21+"
+    implementation "com.google.android.gms:play-services-auth:19+"
+    implementation 'com.android.support:support-annotations:28.2.0'
+    implementation 'com.google.api-client:google-api-client-android:1.32.1'
+    implementation 'com.google.apis:google-api-services-drive:v3-rev136-1.25.0'
 }
