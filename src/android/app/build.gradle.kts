@@ -182,10 +182,13 @@ if (configureCoronaPlugins == "YES") {
 //</editor-fold>
 
 android {
-    compileSdkVersion(28)
+    packagingOptions {
+        exclude ("META-INF/DEPENDENCIES")
+    }
+    compileSdkVersion(29)
     defaultConfig {
         applicationId = coronaAppPackage
-        targetSdkVersion(28)
+        targetSdkVersion(29)
         minSdkVersion(coronaMinSdkVersion)
         versionCode = coronaVersionCode
         versionName = coronaVersionName
@@ -1219,5 +1222,5 @@ dependencies {
     if (file("../plugin").exists()) {
         implementation(project(":plugin"))
     }
-    implementation("com.android.support:multidex:1.0.3")
+    implementation("androidx.multidex:multidex:2.0.1")
 }
