@@ -3,3 +3,8 @@ dependencies {
     implementation "com.google.android.gms:play-services-auth:19+"
     implementation 'com.google.apis:google-api-services-drive:v3-rev136-1.25.0'
 }
+android {
+    packagingOptions {
+        exclude ("META-INF/DEPENDENCIES")
+    }
+}

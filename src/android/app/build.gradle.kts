@@ -180,11 +180,12 @@ if (configureCoronaPlugins == "YES") {
 }
 
 //</editor-fold>
-
 android {
     packagingOptions {
-        exclude ("META-INF/DEPENDENCIES")
+        exclude("META-INF/DEPENDENCIES")
     }
+}
+android {
     compileSdkVersion(29)
     defaultConfig {
         applicationId = coronaAppPackage
