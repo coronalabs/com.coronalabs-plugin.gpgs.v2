@@ -18,6 +18,9 @@ import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.games.AnnotatedData;
 import com.google.android.gms.games.Game;
 import com.google.android.gms.games.Games;
+import com.google.android.gms.games.GamesClient;
+import com.google.android.gms.games.GamesSignInClient;
+import com.google.android.gms.games.PlayGames;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.naef.jnlua.JavaFunction;
@@ -131,6 +134,8 @@ public class LuaLoader implements JavaFunction, Connector.SignInListener {
 			luaLoginListener = luaListener;
 		}
 		isLoginLegacy = isLegacy;
+		//Disable Drive
+		Connector.shouldUseDrive = params.getBoolean("useDrive", true);
 
 		CoronaActivity activity = CoronaEnvironment.getCoronaActivity();
 		if (activity != null) {
@@ -246,7 +251,8 @@ public class LuaLoader implements JavaFunction, Connector.SignInListener {
 					gravity = Gravity.BOTTOM | Gravity.END;
 					break;
 			}
-			Games.getGamesClient(Connector.getContext(), Connector.getSignInAccount()).setGravityForPopups(gravity);
+
+			//Games.getGamesClient(Connector.getContext(), Connector.getSignInAccount()).setGravityForPopups(gravity);
 		}
 		return 0;
 	}
@@ -259,6 +265,8 @@ public class LuaLoader implements JavaFunction, Connector.SignInListener {
 			int listenerIndex = 1;
 			if (CoronaLua.isListener(L, listenerIndex, name)) {
 				final int luaListener = CoronaLua.newRef(L, listenerIndex);
+
+				/*
 				Games.getGamesMetadataClient(Connector.getContext(), Connector.getSignInAccount()).loadGame().addOnCompleteListener(new OnCompleteListener<AnnotatedData<Game>>() {
 					@Override
 					public void onComplete(@NonNull Task<AnnotatedData<Game>> task) {
@@ -280,6 +288,8 @@ public class LuaLoader implements JavaFunction, Connector.SignInListener {
 						Utils.dispatchEvent(luaListener, event, true);
 					}
 				});
+
+				 */
 			}
 			else {
 				Utils.log(name + " can receive listener parameter, got "+ L.typeName(1));
@@ -348,6 +358,7 @@ public class LuaLoader implements JavaFunction, Connector.SignInListener {
 		}
 		if (Utils.checkConnection()) {
 			final int listener = luaListener;
+			/*
 			Games.getGamesClient(Connector.getContext(), Connector.getSignInAccount()).getSettingsIntent().addOnCompleteListener(new OnCompleteListener<Intent>() {
 				@Override
 				public void onComplete(@NonNull Task<Intent> task) {
@@ -355,6 +366,8 @@ public class LuaLoader implements JavaFunction, Connector.SignInListener {
 						Utils.startActivity(task.getResult(), name, listener);
 				}
 			});
+
+			 */
 		}
 		return 0;
 	}
@@ -498,6 +511,7 @@ public class LuaLoader implements JavaFunction, Connector.SignInListener {
 		}
 
 		void run() {
+			/*
 			Games.getGamesClient(Connector.getContext(), Connector.getSignInAccount()).
 					getCurrentAccountName().addOnCompleteListener(new OnCompleteListener<String>() {
 				@Override
@@ -508,6 +522,8 @@ public class LuaLoader implements JavaFunction, Connector.SignInListener {
 					Utils.dispatchEvent(luaListener, event, true);
 				}
 			});
+
+			 */
 		}
 	}
 

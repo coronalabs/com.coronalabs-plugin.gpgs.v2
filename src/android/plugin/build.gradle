@@ -4,7 +4,7 @@ android {
     compileSdkVersion 29
 
     defaultConfig {
-        minSdkVersion 15
+        minSdkVersion 19
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -13,7 +13,6 @@ android {
 
 dependencies {
     implementation ':Corona@aar'
-    implementation "com.google.android.gms:play-services-games:21+"
-    implementation "com.google.android.gms:play-services-auth:19+"
-    implementation 'com.google.apis:google-api-services-drive:v3-rev136-1.25.0'
+    implementation "com.google.android.gms:play-services-games-v2:17.0.0"
+    implementation 'com.google.android.gms:play-services-auth:20.2.+'
 }

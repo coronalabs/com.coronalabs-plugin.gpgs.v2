@@ -15,9 +15,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.Scope;
-import com.google.api.services.drive.DriveScopes;
+import com.google.android.gms.drive.Drive;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesActivityResultCodes;
+import com.google.android.gms.games.GamesClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -34,16 +35,18 @@ class Connector implements OnActivityResultHandler {
 	}
 
 	private SignInListener signInListener;
+	private GoogleSignInOptions.Builder _signInBuilder;
 	private GoogleSignInOptions _signInOptions;
 	private GoogleSignInClient _signInClient;
+	public static boolean shouldUseDrive = true; // should add Drive scope to login
 	private GoogleSignInClient getSignInClient() {
 		if(_signInOptions==null) {
-			_signInOptions = new GoogleSignInOptions.
-					Builder(GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN).
-					requestScopes(new Scope(DriveScopes.DRIVE_FILE)).
-					requestScopes(new Scope(DriveScopes.DRIVE_APPDATA)).
-					requestScopes(Games.SCOPE_GAMES_LITE).
-					build();
+			_signInBuilder = new GoogleSignInOptions.
+					Builder(GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
+			if(shouldUseDrive == true){
+				_signInBuilder.requestScopes(Drive.SCOPE_APPFOLDER);
+			}
+			_signInOptions = _signInBuilder.build();
 		}
 		if(_signInClient==null) {
 			_signInClient = GoogleSignIn.getClient(getContext(), _signInOptions);
@@ -72,6 +75,9 @@ class Connector implements OnActivityResultHandler {
     static Context getContext() {
         return CoronaEnvironment.getApplicationContext();
     }
+	static Activity getActivity() {
+		return CoronaEnvironment.getCoronaActivity();
+	}
 
     static GoogleSignInAccount getSignInAccount() {
         return GoogleSignIn.getLastSignedInAccount(getContext());
@@ -100,9 +106,8 @@ class Connector implements OnActivityResultHandler {
     	_signInOptions = new GoogleSignInOptions.
 				Builder(GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN).
 				requestServerAuthCode(serverId).
-				requestScopes(new Scope(DriveScopes.DRIVE_APPDATA)).
-				requestScopes(new Scope(DriveScopes.DRIVE_FILE)).
-				requestScopes(Games.SCOPE_GAMES_LITE).
+				requestScopes(Drive.SCOPE_APPFOLDER).
+
 				requestEmail().
 				build();
 		_signInClient = null;

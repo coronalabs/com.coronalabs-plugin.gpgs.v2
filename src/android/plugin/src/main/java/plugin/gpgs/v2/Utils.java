@@ -25,11 +25,6 @@ import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 
-import static com.google.android.gms.games.GamesStatusCodes.STATUS_CLIENT_RECONNECT_REQUIRED;
-import static com.google.android.gms.games.GamesStatusCodes.STATUS_INTERNAL_ERROR;
-import static com.google.android.gms.games.GamesStatusCodes.STATUS_MULTIPLAYER_DISABLED;
-import static com.google.android.gms.games.GamesStatusCodes.STATUS_OK;
-import static com.google.android.gms.games.GamesStatusCodes.STATUS_REAL_TIME_CONNECTION_FAILED;
 
 
 abstract class Utils extends LuaUtils {
@@ -112,6 +107,7 @@ abstract class Utils extends LuaUtils {
 		}
 	}
 	static String statusCodeToString(int statusCode) {
+		/*
 		switch (statusCode) {
 			case STATUS_OK:
 				return "ok";
@@ -126,6 +122,9 @@ abstract class Utils extends LuaUtils {
 			default:
 				return "Unknown error code (" + statusCode + ")";
 		}
+
+		 */
+		return "";
 	}
 
 	static class AvailabilityResult {
@@ -298,7 +297,7 @@ abstract class Utils extends LuaUtils {
 			put(metadata, "progress", m.getProgressValue());
 		}
 		put(metadata, "id", m.getSnapshotId());
-		put(metadata, "title", m.getTitle());
+		//put(metadata, "title", m.getTitle());
 		put(metadata, "name", m.getUniqueName());
 		put(metadata, "hasChangePending", m.hasChangePending());
 

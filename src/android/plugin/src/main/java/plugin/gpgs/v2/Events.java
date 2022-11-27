@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.games.AnnotatedData;
 import com.google.android.gms.games.EventsClient;
 import com.google.android.gms.games.Games;
+import com.google.android.gms.games.PlayGames;
 import com.google.android.gms.games.event.Event;
 import com.google.android.gms.games.event.EventBuffer;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -42,7 +43,7 @@ class Events {
 	 * Returns EventsClient instance
 	 */
 	private EventsClient getClient(){
-		return Games.getEventsClient(Connector.getContext(), Connector.getSignInAccount());
+		return PlayGames.getEventsClient(Connector.getActivity());
 	}
 
 	//region Lua functions

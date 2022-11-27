@@ -6,8 +6,11 @@ import android.graphics.Bitmap;
 import androidx.annotation.NonNull;
 
 import com.ansca.corona.CoronaActivity;
+import com.ansca.corona.CoronaEnvironment;
 import com.google.android.gms.games.AnnotatedData;
 import com.google.android.gms.games.Games;
+import com.google.android.gms.games.GamesClient;
+import com.google.android.gms.games.PlayGames;
 import com.google.android.gms.games.SnapshotsClient;
 import com.google.android.gms.games.snapshot.Snapshot;
 import com.google.android.gms.games.snapshot.SnapshotMetadata;
@@ -24,14 +27,16 @@ import java.util.Hashtable;
 import plugin.gpgs.v2.LuaUtils.Scheme;
 import plugin.gpgs.v2.LuaUtils.Table;
 
-import static com.google.android.gms.games.snapshot.Snapshots.DISPLAY_LIMIT_NONE;
-import static com.google.android.gms.games.snapshot.Snapshots.EXTRA_SNAPSHOT_METADATA;
-import static com.google.android.gms.games.snapshot.Snapshots.EXTRA_SNAPSHOT_NEW;
-import static com.google.android.gms.games.snapshot.Snapshots.RESOLUTION_POLICY_HIGHEST_PROGRESS;
-import static com.google.android.gms.games.snapshot.Snapshots.RESOLUTION_POLICY_LAST_KNOWN_GOOD;
-import static com.google.android.gms.games.snapshot.Snapshots.RESOLUTION_POLICY_LONGEST_PLAYTIME;
-import static com.google.android.gms.games.snapshot.Snapshots.RESOLUTION_POLICY_MANUAL;
-import static com.google.android.gms.games.snapshot.Snapshots.RESOLUTION_POLICY_MOST_RECENTLY_MODIFIED;
+import static com.google.android.gms.games.SnapshotsClient.DISPLAY_LIMIT_NONE;
+import static com.google.android.gms.games.SnapshotsClient.EXTRA_SNAPSHOT_METADATA;
+import static com.google.android.gms.games.SnapshotsClient.EXTRA_SNAPSHOT_NEW;
+import static com.google.android.gms.games.SnapshotsClient.RESOLUTION_POLICY_HIGHEST_PROGRESS;
+import static com.google.android.gms.games.SnapshotsClient.RESOLUTION_POLICY_LAST_KNOWN_GOOD;
+import static com.google.android.gms.games.SnapshotsClient.RESOLUTION_POLICY_LONGEST_PLAYTIME;
+import static com.google.android.gms.games.SnapshotsClient.RESOLUTION_POLICY_MANUAL;
+import static com.google.android.gms.games.SnapshotsClient.RESOLUTION_POLICY_MOST_RECENTLY_MODIFIED;
+import static com.google.android.gms.games.snapshot.Snapshot.*;
+
 
 class Snapshots {
 
@@ -97,7 +102,8 @@ class Snapshots {
 	}
 
 	private SnapshotsClient getClient() {
-		return Games.getSnapshotsClient(Connector.getContext(), Connector.getSignInAccount());
+		return PlayGames.getSnapshotsClient(Connector.getActivity());
+
 	}
 
 	//region Lua functions

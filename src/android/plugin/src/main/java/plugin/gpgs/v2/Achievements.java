@@ -7,6 +7,7 @@ import com.ansca.corona.CoronaLua;
 import com.google.android.gms.games.AchievementsClient;
 import com.google.android.gms.games.AnnotatedData;
 import com.google.android.gms.games.Games;
+import com.google.android.gms.games.PlayGames;
 import com.google.android.gms.games.achievement.Achievement;
 import com.google.android.gms.games.achievement.AchievementBuffer;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -66,7 +67,8 @@ class Achievements {
 	 * Returns AchievementsClient instance
 	 */
 	private AchievementsClient getClient(){
-		return Games.getAchievementsClient(Connector.getContext(), Connector.getSignInAccount());
+
+		return PlayGames.getAchievementsClient(Connector.getActivity());
 	}
 
 	//region Lua functions

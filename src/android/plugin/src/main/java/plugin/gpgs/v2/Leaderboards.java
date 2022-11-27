@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.games.AnnotatedData;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.LeaderboardsClient;
+import com.google.android.gms.games.PlayGames;
 import com.google.android.gms.games.leaderboard.Leaderboard;
 import com.google.android.gms.games.leaderboard.LeaderboardBuffer;
 import com.google.android.gms.games.leaderboard.LeaderboardScore;
@@ -55,7 +56,7 @@ class Leaderboards {
 	}
 
 	private LeaderboardsClient getClient(){
-		return Games.getLeaderboardsClient(Connector.getContext(), Connector.getSignInAccount());
+		return PlayGames.getLeaderboardsClient(Connector.getActivity());
 	}
 
 	//region Lua functions

@@ -9,6 +9,7 @@ import com.ansca.corona.CoronaActivity;
 import com.ansca.corona.CoronaLua;
 import com.google.android.gms.games.AnnotatedData;
 import com.google.android.gms.games.Games;
+import com.google.android.gms.games.PlayGames;
 import com.google.android.gms.games.Player;
 import com.google.android.gms.games.PlayerBuffer;
 import com.google.android.gms.games.PlayerStatsClient;
@@ -25,7 +26,7 @@ import java.util.Hashtable;
 import plugin.gpgs.v2.LuaUtils.Scheme;
 import plugin.gpgs.v2.LuaUtils.Table;
 
-import static com.google.android.gms.games.Players.EXTRA_PLAYER_SEARCH_RESULTS;
+import static com.google.android.gms.games.PlayersClient.EXTRA_PLAYER_SEARCH_RESULTS;
 
 class Players {
 
@@ -59,11 +60,11 @@ class Players {
 	}
 
 	private PlayersClient getClient(){
-		return Games.getPlayersClient(Connector.getContext(), Connector.getSignInAccount());
+		return PlayGames.getPlayersClient(Connector.getActivity());
 	}
 
 	private PlayerStatsClient getStatsClient(){
-		return Games.getPlayerStatsClient(Connector.getContext(), Connector.getSignInAccount());
+		return PlayGames.getPlayerStatsClient(Connector.getActivity());
 	}
 
 	//region Lua functions

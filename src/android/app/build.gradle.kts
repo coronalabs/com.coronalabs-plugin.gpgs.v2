@@ -106,7 +106,7 @@ val coronaMinSdkVersion = try {
     }
 } catch (ignore: Throwable) {
     null
-} ?: 15
+} ?: 19
 
 val coronaVersionName = try {
     buildSettings?.obj("buildSettings")?.obj("android")?.let {
@@ -192,6 +192,7 @@ android {
         targetSdkVersion(29)
         minSdkVersion(coronaMinSdkVersion)
         versionCode = coronaVersionCode
+        ndkVersion = "20.0.5594570"
         versionName = coronaVersionName
         multiDexEnabled = true
     }
